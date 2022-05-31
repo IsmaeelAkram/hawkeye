@@ -99,12 +99,12 @@ def scan(url: str):
     good(f"Successfully scanned '{url}'")
 
 
-R.sadd("hawkeye:queue", STARTING_URL)
 while True:
     url = R.spop("hawkeye:queue")
     if url:
         scan_thread = threading.Thread(target=scan, args=(url.decode("utf-8"),))
         scan_thread.setDaemon(True)
         scan_thread.start()
-    # else:
-    # info("Queue is empty")
+    else:
+        info("Queue is empty")
+        R.sadd("hawkeye:queue", STARTING_URL)
