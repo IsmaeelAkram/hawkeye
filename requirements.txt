@@ -1,0 +1,7 @@
+redis
+beautifulsoup4
+requests
+git+https://github.com/ismaeelakram/printer
+python-dotenv
+pyfiglet
+pychalk
