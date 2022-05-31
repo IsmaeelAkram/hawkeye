@@ -27,6 +27,7 @@ load_dotenv()
 R = redis.Redis(host=environ["REDIS_HOST"], port=6379, password=environ["REDIS_PASS"])
 STARTING_URL = "https://bths.edu/index.jsp"
 USER_AGENT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+MAX_THREADS = 50
 IP = get("https://checkip.amazonaws.com").text.replace("\n", "")
 connectedToNord = get(
     "https://nordvpn.com/wp-admin/admin-ajax.php?action=get_user_info_data"
@@ -36,6 +37,7 @@ print(chalk.red(Figlet(font="slant").renderText("HAWKEYE")))
 print(chalk.yellow(f"BY ") + "ISMAEEL AKRAM")
 print(chalk.yellow(f"STARTING URL: ") + STARTING_URL)
 print(chalk.yellow(f"USER AGENT: ") + USER_AGENT)
+print(chalk.yellow(f"MAX THREADS: ") + str(MAX_THREADS))
 print(chalk.yellow(f"REDIS CONNECTED: ") + str(R.ping()))
 print(chalk.yellow(f"IP ADDRESS: ") + IP)
 print(chalk.yellow(f"CONNECTED TO NORDVPN: ") + str(connectedToNord))
@@ -100,11 +102,13 @@ def scan(url: str):
 
 
 while True:
-    url = R.spop("hawkeye:queue")
-    if url:
-        scan_thread = threading.Thread(target=scan, args=(url.decode("utf-8"),))
-        scan_thread.setDaemon(True)
-        scan_thread.start()
-    else:
-        info("Queue is empty")
-        R.sadd("hawkeye:queue", STARTING_URL)
+    if not threading.active_count() >= MAX_THREADS:
+        url = R.spop("hawkeye:queue")
+        if url:
+            scan_thread = threading.Thread(target=scan, args=(url.decode("utf-8"),))
+            scan_thread.setDaemon(True)
+            scan_thread.start()
+
+        else:
+            info("Queue is empty")
+            R.sadd("hawkeye:queue", STARTING_URL)
