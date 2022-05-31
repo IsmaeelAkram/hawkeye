@@ -99,7 +99,7 @@ def scan(url: str):
     good(f"Successfully scanned '{url}'")
 
 
-# R.sadd("hawkeye:queue", STARTING_URL)
+R.sadd("hawkeye:queue", STARTING_URL)
 while True:
     url = R.spop("hawkeye:queue")
     if url:
