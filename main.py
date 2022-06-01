@@ -28,7 +28,7 @@ R = redis.Redis(host=environ["REDIS_HOST"], port=6379, password=environ["REDIS_P
 STARTING_URL = "https://bths.edu/index.jsp"
 USER_AGENT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
 try:
-    MAX_THREADS = environ["MAX_THREADS"]
+    MAX_THREADS = int(environ["MAX_THREADS"])
 except KeyError:
     MAX_THREADS = 10
 IP = get("https://checkip.amazonaws.com").text.replace("\n", "")
