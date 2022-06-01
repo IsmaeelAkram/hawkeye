@@ -27,7 +27,7 @@ load_dotenv()
 R = redis.Redis(host=environ["REDIS_HOST"], port=6379, password=environ["REDIS_PASS"])
 STARTING_URL = "https://bths.edu/index.jsp"
 USER_AGENT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
-MAX_THREADS = 10
+MAX_THREADS = environ["MAX_THREADS"] or 10
 IP = get("https://checkip.amazonaws.com").text.replace("\n", "")
 connectedToNord = get(
     "https://nordvpn.com/wp-admin/admin-ajax.php?action=get_user_info_data"
@@ -112,8 +112,8 @@ while True:
         else:
             info("Queue is empty")
             R.sadd("hawkeye:queue", STARTING_URL)
-    else:
-        danger(
-            "Won't create thread because there are too many threads running: "
-            + str(threading.active_count())
-        )
+    # else:
+    #     danger(
+    #         "Won't create thread because there are too many threads running: "
+    #         + str(threading.active_count())
+    #     )
