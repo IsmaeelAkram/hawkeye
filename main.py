@@ -27,7 +27,10 @@ load_dotenv()
 R = redis.Redis(host=environ["REDIS_HOST"], port=6379, password=environ["REDIS_PASS"])
 STARTING_URL = "https://bths.edu/index.jsp"
 USER_AGENT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
-MAX_THREADS = environ["MAX_THREADS"] or 10
+try:
+    MAX_THREADS = environ["MAX_THREADS"]
+except KeyError:
+    MAX_THREADS = 10
 IP = get("https://checkip.amazonaws.com").text.replace("\n", "")
 connectedToNord = get(
     "https://nordvpn.com/wp-admin/admin-ajax.php?action=get_user_info_data"
