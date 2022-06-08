@@ -5,3 +5,8 @@ git+https://github.com/ismaeelakram/printer
 python-dotenv
 pyfiglet
 pychalk
+matplotlib
+numpy
+pandas
+squarify
+seaborn

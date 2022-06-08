@@ -1,2 +1,5 @@
 .env
 __pycache__/
+charts/
+.env.prod
+sample_result.json
